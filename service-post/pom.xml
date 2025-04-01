@@ -84,7 +84,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>11.5.0</version>
                 <configuration>
-                    <url>jdbc:sqlserver://localhost;instanceName=SQLEXPRESS01;databaseName=PostDB;encrypt=false;trustServerCertificate=true</url>
+                    <url>jdbc:sqlserver://localhost;instanceName=SQLEXPRESS;databaseName=PostDB;encrypt=false;trustServerCertificate=true</url>
                     <user>admin</user>
                     <password>12345678</password>
                 </configuration>
