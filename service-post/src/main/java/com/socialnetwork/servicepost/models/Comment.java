@@ -1,7 +1,5 @@
 package com.socialnetwork.servicepost.models;
 
-import com.socialnetwork.servicepost.entities.PostEntity;
-
 import java.time.LocalDateTime;
 
 public class Comment {
