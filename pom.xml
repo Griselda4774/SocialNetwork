@@ -31,6 +31,7 @@
 
     <modules>
         <module>service-post</module>
+        <module>service-chat</module>
     </modules>
 
     <build>

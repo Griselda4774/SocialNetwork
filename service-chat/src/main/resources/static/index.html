@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Clone</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <h2>Cuộc trò chuyện</h2>
+        <ul id="conversationList">
+            <!-- Danh sách cuộc trò chuyện sẽ được tải động -->
+        </ul>
+    </aside>
+    <main class="chat-area">
+        <header class="chat-header">
+            <h3 id="chatTitle">Chọn cuộc trò chuyện</h3>
+        </header>
+        <section class="chat-box" id="chatBox">
+            <!-- Tin nhắn sẽ được hiển thị ở đây -->
+        </section>
+        <form id="chatForm" class="chat-input">
+            <input type="text" id="content" placeholder="Nhập tin nhắn..." autocomplete="off">
+            <button type="submit">Gửi</button>
+        </form>
+    </main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
