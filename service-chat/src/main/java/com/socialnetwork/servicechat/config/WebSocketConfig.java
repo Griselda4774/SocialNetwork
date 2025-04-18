@@ -10,14 +10,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // Endpoint client sẽ connect: /ws
         registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic"); // Prefix cho message broker
-        //registry.setApplicationDestinationPrefixes("/app"); // Prefix cho client gửi message
+        registry.enableSimpleBroker("/topic"); // client nhận
+        registry.setApplicationDestinationPrefixes("/app"); // client gửi
     }
 }
-

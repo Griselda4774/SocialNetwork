@@ -14,10 +14,20 @@ public class MessageRestController {
     @Autowired
     private MessageService messageService;
 
+//    @GetMapping("/conversation/{conversationId}")
+//    public List<MessageEntity> getMessagesByConversation(@PathVariable("conversationId") Long conversationId) {
+//        return messageService.getALLMessagesByConversationId(conversationId);
+//    }
+
     @GetMapping("/conversation/{conversationId}")
-    public List<MessageEntity> getMessagesByConversation(@PathVariable("conversationId") Long conversationId) {
-        return messageService.getMessagesByConversationId(conversationId);
+    public List<MessageEntity> getMessagesByConversation(
+            @PathVariable("conversationId") Long conversationId,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "20") int size) {
+        return messageService.getLatestMessagesByConversationId(conversationId, page, size);
     }
+
+
 //    // Endpoint: GET /api/messages/conversation/1
 //    @GetMapping("/conversation/{conversationId}")
 //    public List<MessageEntity> getMessagesByConversation(@PathVariable Long conversationId) {

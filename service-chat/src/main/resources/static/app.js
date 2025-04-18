@@ -6,48 +6,49 @@ function connectWebSocket() {
     const socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, () => {
-        console.log('Đã kết nối WebSocket');
+        console.log('✅ Kết nối WebSocket thành công');
     });
 }
 
 function loadConversations(userId) {
-    // Thêm userId vào URL API
     fetch(`/conversations/user/${userId}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Lỗi khi tải cuộc trò chuyện: ' + response.status);
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(conversations => {
             const list = document.getElementById('conversationList');
-            list.innerHTML = ''; // Xóa danh sách cuộc trò chuyện hiện tại
-
-            // Kiểm tra nếu conversations có dữ liệu
+            list.innerHTML = '';
             if (Array.isArray(conversations) && conversations.length > 0) {
                 conversations.forEach(conv => {
                     const title = `Cuộc trò chuyện với ${conv.partnerName}`;
                     const li = document.createElement('li');
                     li.textContent = title;
-                    li.onclick = () => selectConversation(conv.id, title); // Gọi hàm xử lý khi chọn cuộc trò chuyện
+                    li.onclick = () => selectConversation(conv.id, title);
                     list.appendChild(li);
                 });
             } else {
-                // Thêm thông báo nếu không có cuộc trò chuyện nào
                 const li = document.createElement('li');
                 li.textContent = 'Không có cuộc trò chuyện nào';
                 list.appendChild(li);
             }
         })
-        .catch(err => {
-            console.error("Lỗi khi tải danh sách cuộc trò chuyện:", err);
-        });
+        .catch(err => console.error("Lỗi khi tải danh sách:", err));
 }
 
 function selectConversation(id, name) {
     currentConversationId = id;
     document.getElementById('chatTitle').textContent = name;
-    loadMessages(id);
+
+    const chatBox = document.getElementById('chatBox');
+    chatBox.innerHTML = '';
+
+    // Gọi API để load 20 tin nhắn gần nhất
+    fetch(`/messages/conversation/${id}?page=0&size=20`)
+        .then(response => response.json())
+        .then(messages => {
+            messages.reverse().forEach(displayMessage);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+    // Đăng ký nhận tin nhắn mới qua WebSocket
     if (stompClient) {
         stompClient.subscribe(`/topic/conversations/${id}`, message => {
             const msg = JSON.parse(message.body);
@@ -56,16 +57,6 @@ function selectConversation(id, name) {
     }
 }
 
-function loadMessages(conversationId) {
-    fetch(`/messages/conversation/${conversationId}`)
-        .then(response => response.json())
-        .then(messages => {
-            const chatBox = document.getElementById('chatBox');
-            chatBox.innerHTML = '';
-            messages.forEach(displayMessage);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        });
-}
 
 function displayMessage(msg) {
     const chatBox = document.getElementById('chatBox');
@@ -80,22 +71,19 @@ document.getElementById('chatForm').addEventListener('submit', event => {
     event.preventDefault();
     const contentInput = document.getElementById('content');
     const content = contentInput.value.trim();
-    if (!content || !currentConversationId) return;
+    if (!content || !currentConversationId || !stompClient) return;
+
+    // ✅ Gửi đúng định dạng: conversation là object
     const message = {
         content,
-        conversationId: currentConversationId,
-        authorId
+        authorId,
+        conversation: { id: currentConversationId }
     };
-    fetch('/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(message)
-    }).then(response => {
-        if (response.ok) {
-            contentInput.value = '';
-        }
-    });
+
+    stompClient.send("/app/chat", {}, JSON.stringify(message));
+    contentInput.value = '';
 });
+
 
 connectWebSocket();
 loadConversations(101);
