@@ -13,7 +13,7 @@ import java.util.List;
 public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "content", columnDefinition = "NVARCHAR(MAX)")
