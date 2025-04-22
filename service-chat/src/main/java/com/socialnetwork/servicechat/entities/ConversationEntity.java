@@ -18,7 +18,7 @@ public class ConversationEntity {
     private Long user2Id;
 
     @Column(name = "unread_count")
-    private int unreadCount;
+    private Integer unreadCount;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MessageEntity> messages;
