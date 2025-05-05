@@ -41,6 +41,7 @@
         <module>service-group</module>
         <module>service-auth</module>
         <module>service-noti</module>
+        <module>server-discovery</module>
     </modules>
 
     <build>
